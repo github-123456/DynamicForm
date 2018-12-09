@@ -2,68 +2,64 @@
 @{
     ViewData["Title"] = "EditFormAttribute";
 }
-<div class="container">
-    <div class="p-3">
-        <div class="header m-2 clearfix">
-            <a href="/">back to form attribute list</a>
-            <div class="float-right">
-                <button class="btn btn-info" type="button" id="save">Save</button>
+<div class="header m-2 clearfix">
+    <a href="/home/configure">back to form attribute list</a>
+    <div class="float-right">
+        <button class="btn btn-info" type="button" id="save">Save</button>
+    </div>
+</div>
+<div class="card mt-3">
+    <div class="card-header">Attribute info</div><div class="card-body">
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label">Name</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" asp-for="Name" />
             </div>
         </div>
-        <div class="card mt-3">
-            <div class="card-header">Attribute info</div><div class="card-body">
-                <div class="form-group row">
-                    <label class="col-sm-2 col-form-label">Name</label>
-                    <div class="col-sm-10">
-                        <input type="text" class="form-control" asp-for="Name" />
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <label class="col-sm-2 col-form-label">Required</label>
-                    <div class="col-sm-10">
-                        <input type="checkbox" asp-for="Required"/>
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <label class="col-sm-2 col-form-label">ControType</label>
-                    <div class="col-sm-10">
-                        <select asp-for="ControlType" class="form-control">
-                            <option value="2">RadioButtonList</option>
-                            <option value="1">TextBox</option>
-                            <option value="3">DropDownList</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <label class="col-sm-2 col-form-label">DisplayOrder</label>
-                    <div class="col-sm-10">
-                        <input type="number" class="form-control" asp-for="DisplayOrder" />
-                    </div>
-                </div>
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label">Required</label>
+            <div class="col-sm-10">
+                <input type="checkbox" asp-for="Required" />
             </div>
         </div>
-        <div class="card mt-3">
-            <div class="card-header">Attribute values</div>
-            <div class="card-body">
-                <table class="table table-primary" id="valueTable">
-                    <thead>
-                        <tr>
-                            <th scope="col">Name</th>
-                            <th scope="col">Dispaly order</th>
-                            <th scope="col">#</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr id="addNewRegion" class="d-none">
-                            <th scope="col"><input type="text" id="addNew-name" class="form-control" /></th>
-                            <th scope="col"><input type="number" id="addNew-displayOrder" class="form-control" /></th>
-                            <th scope="col"><button id="addNewSave" class="btn btn-light mr-3">确定</button><button id="addNewCancel" class="btn btn-light">取消</button></th>
-                        </tr>
-                    </tbody>
-                </table>
-                <button class="btn btn-info" type="button" id="addNew">Add new</button>
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label">ControType</label>
+            <div class="col-sm-10">
+                <select asp-for="ControlType" class="form-control">
+                    <option value="2">RadioButtonList</option>
+                    <option value="1">TextBox</option>
+                    <option value="3">DropDownList</option>
+                </select>
             </div>
         </div>
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label">DisplayOrder</label>
+            <div class="col-sm-10">
+                <input type="number" class="form-control w-25" asp-for="DisplayOrder" />
+            </div>
+        </div>
+    </div>
+</div>
+<div class="card mt-3">
+    <div class="card-header">Attribute values</div>
+    <div class="card-body">
+        <table class="table table-primary" id="valueTable">
+            <thead>
+                <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Dispaly order</th>
+                    <th scope="col">#</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr id="addNewRegion" class="d-none">
+                    <th scope="col"><input type="text" id="addNew-name" class="form-control" /></th>
+                    <th scope="col"><input type="number" id="addNew-displayOrder" class="form-control w-25" /></th>
+                    <th scope="col"><button id="addNewSave" class="btn btn-light mr-3">确定</button><button id="addNewCancel" class="btn btn-light">取消</button></th>
+                </tr>
+            </tbody>
+        </table>
+        <button class="btn btn-info" type="button" id="addNew">Add new</button>
     </div>
 </div>
 <script type="text/template" id="valueTemplate">
@@ -153,5 +149,7 @@
             attributeValues.deleteValue(target)
         })
 
+        //禁止切换租户
+        disableToggleTenant()
     }
 </script>

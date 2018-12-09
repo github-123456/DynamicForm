@@ -1,0 +1,33 @@
+﻿@model List<OrderAttributeViewModel>
+@{
+    ViewData["Title"] = "EditOrder";
+}
+
+<form method="post">
+    <div class="header m-2 clearfix">
+        <a href="/home/order">back to order list</a>
+        <div class="float-right">
+            <button class="btn btn-info" type="submit" id="save">Save</button>
+        </div>
+    </div>
+    <div class="card mt-3">
+        <div class="card-body">
+            @for (int i = 0; i < Model.Count; i++)
+            {
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">@Model[i].Name</label>
+                    <input type="hidden" asp-for="@Model[i].Name" />
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" asp-for="@Model[i].Value" />
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</form>
+<script>
+    window.onload = function () {
+        //禁止切换租户
+        disableToggleTenant()
+    }
+</script>

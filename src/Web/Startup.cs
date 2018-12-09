@@ -53,7 +53,7 @@ namespace Web
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Configure}/{id?}");
+                    template: "{controller=Home}/{action=Order}/{id?}");
             });
         }
     }

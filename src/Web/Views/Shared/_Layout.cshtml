@@ -17,7 +17,24 @@
     </environment>
 </head>
 <body>
-    @RenderBody()
+    <div class="container">
+        <div class="clearfix d-flex align-items-center">
+            <select id="tenants" class="form-control my-3 mr-4" style="width:200px">
+                <option>
+                    租户A
+                </option>
+                <option>
+                    租户B
+                </option>
+                <option>
+                    租户C
+                </option>
+            </select>
+                <a href="/home/order" class="mr-2">order</a>
+                <a href="/home/configure">configure</a>
+        </div>
+        @RenderBody()
+    </div>
     <environment include="Development">
         <script src="~/lib/jquery/dist/jquery.js"></script>
         <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
@@ -38,7 +55,11 @@
         </script>
         <script src="~/js/site.min.js" asp-append-version="true"></script>
     </environment>
-
+    <script>
+        function disableToggleTenant() {
+            $("#tenants").prop("disabled", true)
+        }
+    </script>
     @RenderSection("Scripts", required: false)
 </body>
 </html>

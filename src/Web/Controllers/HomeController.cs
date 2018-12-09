@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Application.DynamicForm.Dto;
 using Microsoft.AspNetCore.Mvc;
 using Web.Models;
 
@@ -16,8 +17,37 @@ namespace Web.Controllers
         }
         public IActionResult Configure()
         {
-            return View();
+            var data = new List<FormAttributeDto> {
+                new FormAttributeDto(){
+                    ControlType=Core.DynamicForm.FormAttributeControlType.DropDownList,
+                    DisplayOrder=131,
+                    Id=13,
+                    Required=true,
+                    Name="收货地址"
+                },
+                 new FormAttributeDto(){
+                    ControlType=Core.DynamicForm.FormAttributeControlType.DropDownList,
+                    DisplayOrder=131,
+                    Id=13,
+                    Required=true,
+                    Name="收货地址"
+                }
+            };
+            return View(data);
         }
+
+        public IActionResult EditFormAttribute()
+        {
+            var data = FormAttributeViewModel.Imitate();
+            return View(data);
+        }
+        [HttpPost]
+        public IActionResult EditFormAttribute(FormAttributeViewModel model)
+        {
+            var data = model;
+            return View(data);
+        }
+
         public IActionResult About()
         {
             ViewData["Message"] = "Your application description page.";

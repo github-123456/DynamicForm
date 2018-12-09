@@ -1,0 +1,157 @@
+﻿@model FormAttributeViewModel
+@{
+    ViewData["Title"] = "EditFormAttribute";
+}
+<div class="container">
+    <div class="p-3">
+        <div class="header m-2 clearfix">
+            <a href="/">back to form attribute list</a>
+            <div class="float-right">
+                <button class="btn btn-info" type="button" id="save">Save</button>
+            </div>
+        </div>
+        <div class="card mt-3">
+            <div class="card-header">Attribute info</div><div class="card-body">
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Name</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" asp-for="Name" />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Required</label>
+                    <div class="col-sm-10">
+                        <input type="checkbox" asp-for="Required"/>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">ControType</label>
+                    <div class="col-sm-10">
+                        <select asp-for="ControlType" class="form-control">
+                            <option value="2">RadioButtonList</option>
+                            <option value="1">TextBox</option>
+                            <option value="3">DropDownList</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">DisplayOrder</label>
+                    <div class="col-sm-10">
+                        <input type="number" class="form-control" asp-for="DisplayOrder" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card mt-3">
+            <div class="card-header">Attribute values</div>
+            <div class="card-body">
+                <table class="table table-primary" id="valueTable">
+                    <thead>
+                        <tr>
+                            <th scope="col">Name</th>
+                            <th scope="col">Dispaly order</th>
+                            <th scope="col">#</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr id="addNewRegion" class="d-none">
+                            <th scope="col"><input type="text" id="addNew-name" class="form-control" /></th>
+                            <th scope="col"><input type="number" id="addNew-displayOrder" class="form-control" /></th>
+                            <th scope="col"><button id="addNewSave" class="btn btn-light mr-3">确定</button><button id="addNewCancel" class="btn btn-light">取消</button></th>
+                        </tr>
+                    </tbody>
+                </table>
+                <button class="btn btn-info" type="button" id="addNew">Add new</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/template" id="valueTemplate">
+    <tr attrid="$id$">
+        <td>$name$</td>
+        <td>$displayOrder$</td>
+        <td>
+            <button class="value-delete btn btn-danger">delete</button>
+        </td>
+    </tr>
+</script>
+<script>
+    function AttributeValues () {
+        this.values = new Array()
+        this.elements = new Array()
+        //增加属性值
+        this.addValue = function (id, name, displayOrder) {
+            if (!name)
+                return
+            var ele = $(document.getElementById("valueTemplate").innerHTML
+                .replace("$id$", id)
+                .replace("$name$", name)
+                .replace("$displayOrder$", displayOrder)
+            )[0]
+            $("#addNewRegion").before(ele)
+            var val = { id, name, displayOrder }
+            this.values.push(val)
+            this.elements.push({ ele, val})
+        }
+        this.deleteValue = function (target) {
+            var e = this.elements.find(s => s.ele == target)
+            $(e.ele).remove()
+            this.elements.splice($.inArray(e, this.elements), 1)
+            this.values.splice($.inArray(e.val, this.values), 1)
+
+        }
+    }
+
+
+    window.onload = function () {
+        //初始化属性值
+        attributeValues = new AttributeValues()
+        @foreach(var i in Model.FormAttributeViewValueModels)
+        {
+            @:attributeValues.addValue(@i.Id, '@i.Name',@i.DisplayOrder)
+        }
+
+
+        //绑定元素事件
+        $("#save").on("click", function () {
+            var data = {
+                Id: $("#Id").val(),
+                Name: $("#Name").val(),
+                ControlType:$("#ControlType").val(),
+                Required:$("#Required").val(),
+                DisplayOrder: $("#DisplayOrder").val(),
+                FormAttributeViewValueModels: attributeValues.values
+            }
+            $.post(location.href, data).done(function () {
+                location.href="/"
+            })
+        })
+        $("#addNew").on("click", function () {
+            $(this).addClass("disabled")
+            $("#addNewRegion").removeClass("d-none")
+        })
+        $("#addNewSave").click(function () {
+            attributeValues.addValue(0, $("#addNew-name").val(), $("#addNew-displayOrder").val())
+            $("#addNew-name").val(null)
+            $("#addNew-displayOrder").val(null)
+            $("#addNew").removeClass("disabled")
+            $("#addNewRegion").addClass("d-none")
+        })
+        $("#addNewCancel").click(function () {
+            $("#addNew").removeClass("disabled")
+            $("#addNewRegion").addClass("d-none")
+        })
+        $("#ControlType").change(function () {
+            if ($(this).val() == 1) {
+                $(".card:last").addClass("d-none")
+            }
+            else
+                $(".card:last").removeClass("d-none")
+        })
+        $(document).on("click", ".value-delete", function () {
+            var target = $(this).parents("tr")[0]
+            attributeValues.deleteValue(target)
+        })
+
+    }
+</script>

@@ -5,8 +5,21 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Include="C:\Users\bigyasuo\Desktop\EditFormAttribute.cshtml-back.cshtml" Link="EditFormAttribute.cshtml-back.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Views\Home\EditFormAttribute.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Application\Application.csproj" />
+    <ProjectReference Include="..\Core\Core.csproj" />
   </ItemGroup>
 
 </Project>

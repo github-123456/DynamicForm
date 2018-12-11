@@ -7,9 +7,9 @@
         <tr>
             <th scope="col">Tenant name</th>
             <th scope="col">Insert time</th>
-            @foreach (var i in Model.AttributeNames)
+            @foreach (var i in Model.OrderAttributeDtos)
             {
-                <th scope="col">@i</th>
+                <th scope="col">@i.Name</th>
             }
             <th scope="col">Edit</th>
         </tr>
@@ -18,11 +18,11 @@
         @foreach (var i in Model.OrderDtos)
         {
             <tr attrid="@i.Id">
-                <td>@i["TenantName"]</td>
-                <td>@i["InsertTime"]</td>
-                @foreach (var j in Model.AttributeNames)
+                <td>@i.TenantName</td>
+                <td>@i.InsertTime</td>
+                @foreach (var j in Model.OrderAttributeDtos)
                 {
-                    <td>@i[j]</td>
+                    <td>@i[j.Id]</td>
                 }
                 <td>
                     <button class="order-edit btn btn-info">Edit</button>

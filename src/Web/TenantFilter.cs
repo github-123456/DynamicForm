@@ -3,22 +3,27 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
+using Application.MultiTenant;
 
 namespace Web
 {
-    public class TenantFilter :IActionFilter
+    public class TenantFilter : IActionFilter
     {
         public void OnActionExecuting(ActionExecutingContext context)
         {
-            // do something before the action executes
-            var tenantName = context.HttpContext.Request.Cookies["tenant"];
-            context.HttpContext.Response.Cookies.Append("tenant", tenantName);
-            context.HttpContext.Items["tenantName"] = string.IsNullOrEmpty(tenantName) ? "aaaa" : tenantName;
+            var tenantService = context.HttpContext.RequestServices.GetService<ITenantService>();
+            var tenants = tenantService.GetTenants();
+            if (tenants.Count < 1)
+                tenants = tenantService.InsertExampleData();
+            context.HttpContext.Items["tenants"] = tenants;
+
+            var tenantName = context.HttpContext.Request.Cookies["tenantId"] ?? tenants.First().Id.ToString();
+            context.HttpContext.Items["tenantId"] = tenantName;
         }
 
         public void OnActionExecuted(ActionExecutedContext context)
         {
-            // do something after the action executes
         }
     }
 }

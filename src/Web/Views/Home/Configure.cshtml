@@ -16,16 +16,16 @@
     <tbody>
         @foreach (var i in Model)
         {
-        <tr attrid="@i.Id">
-            <td>@i.TenantName</td>
-            <td>@i.Name</td>
-            <td>@i.ControlType</td>
-            <td>@i.Required</td>
-            <td>@i.DisplayOrder</td>
-            <td>
-                <button class="attr-edit btn btn-info">Edit</button>
-            </td>
-        </tr>
+            <tr attrid="@i.Id">
+                <td>@i.TenantName</td>
+                <td>@i.Name</td>
+                <td>@i.ControlType</td>
+                <td>@i.Required</td>
+                <td>@i.DisplayOrder</td>
+                <td>
+                    <button class="attr-edit btn btn-info">Edit</button>
+                </td>
+            </tr>
         }
     </tbody>
 </table>
@@ -48,9 +48,9 @@
 
     //跳转至属性编辑页
     function redirectEditAttr(id) {
-        var url = "/home/EditFormAttribute/"
+        var url = "/home/EditFormAttribute"
         if (id)
-            url += id
+            url += "?attributeId=" + id
         window.location = url
     }
 </script>

@@ -12,61 +12,59 @@ namespace Web.Controllers
 {
     public class HomeController : Controller
     {
-        DynamicFormService dynamicFormService = new DynamicFormService();
+        private readonly IDynamicFormService dynamicFormService;
+        private int TenantId => Convert.ToInt32(HttpContext.Items["tenantId"]);
+        public HomeController(IDynamicFormService dynamicFormService)
+        {
+            this.dynamicFormService = dynamicFormService;
+
+        }
         public IActionResult Index()
         {
             return View();
         }
         public IActionResult Configure()
         {
-            var tenantName = "tenant a";
-            var data = new List<FormAttributeDto> {
-                new FormAttributeDto(){
-                    TenantName=tenantName,
-                    ControlType=Core.DynamicForm.FormAttributeControlType.DropDownList,
-                    DisplayOrder=131,
-                    Id=13,
-                    Required=true,
-                    Name="收货地址"
-                },
-                 new FormAttributeDto(){
-                    TenantName=tenantName,
-                    ControlType=Core.DynamicForm.FormAttributeControlType.DropDownList,
-                    DisplayOrder=131,
-                    Id=13,
-                    Required=true,
-                    Name="收货地址"
-                }
-            };
+            var data = this.dynamicFormService.GetAttributes(TenantId);
             return View(data);
         }
 
-        public IActionResult EditFormAttribute()
+        public IActionResult EditFormAttribute(int attributeId)
         {
-            var data = FormAttributeViewModel.Imitate();
+            FormAttributeEditDto data = null;
+            if (attributeId == 0)
+            {
+                data = new FormAttributeEditDto();
+            }
+            else
+                data = this.dynamicFormService.GetAttribute(attributeId);
             return View(data);
         }
         [HttpPost]
-        public IActionResult EditFormAttribute(FormAttributeViewModel model)
+        public IActionResult EditFormAttribute(FormAttributeEditDto data)
         {
-            var data = model;
+            data.TenantId = TenantId;
+            dynamicFormService.SaveAttribute(data);
             return View(data);
         }
         public IActionResult Order()
         {
-            var data = OrderDto.Imitate();
-            var attributeNames = this.dynamicFormService.GetOrderAttributeNames(0);
-            return View(new OrderListViewModel() { AttributeNames = attributeNames, OrderDtos = data });
+            var data = dynamicFormService.GetOrders(TenantId);
+            var OrderAttributeDtos = this.dynamicFormService.GetOrderAttributes(TenantId);
+            return View(new OrderListViewModel() { OrderAttributeDtos = OrderAttributeDtos, OrderDtos = data });
         }
-        public IActionResult EditOrder()
+        public IActionResult EditOrder(int id)
         {
-            var data = OrderAttributeViewModel.Imitate();
+            var data = dynamicFormService.GetFormAttributes(TenantId, id);
+            ViewBag.OrderId = id;
             return View(data);
         }
         [HttpPost]
-        public IActionResult EditOrder(List<OrderAttributeViewModel> model)
+        public IActionResult EditOrder(int orderId, List<FormAttributeEditDto> model)
         {
-            return View(model);
+            var data = model.Select(s => new GenericAttributeDto() { FormAttributeId = s.Id, Value = s.Value }).ToList();
+            this.dynamicFormService.SaveOrder(orderId, TenantId, data);
+            return RedirectToAction("Order");
         }
         public IActionResult About()
         {

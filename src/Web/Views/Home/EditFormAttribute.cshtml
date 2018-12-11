@@ -1,4 +1,4 @@
-﻿@model FormAttributeViewModel
+﻿@model Application.DynamicForm.Dto.FormAttributeEditDto
 @{
     ViewData["Title"] = "EditFormAttribute";
 }
@@ -10,6 +10,7 @@
 </div>
 <div class="card mt-3">
     <div class="card-header">Attribute info</div><div class="card-body">
+        <input type="hidden" class="form-control" asp-for="Id" />
         <div class="form-group row">
             <label class="col-sm-2 col-form-label">Name</label>
             <div class="col-sm-10">
@@ -19,7 +20,7 @@
         <div class="form-group row">
             <label class="col-sm-2 col-form-label">Required</label>
             <div class="col-sm-10">
-                <input type="checkbox" asp-for="Required" />
+                <input type="checkbox" class="align-bottom" asp-for="Required" />
             </div>
         </div>
         <div class="form-group row">
@@ -102,9 +103,9 @@
     window.onload = function () {
         //初始化属性值
         attributeValues = new AttributeValues()
-        @foreach(var i in Model.FormAttributeViewValueModels)
+        @foreach(var i in Model.FormAttributeValueEditDtos)
         {
-            @:attributeValues.addValue(@i.Id, '@i.Name',@i.DisplayOrder)
+            @:attributeValues.addValue(@i.Id, '@Html.Raw(@i.Name)',@i.DisplayOrder)
         }
 
 
@@ -113,10 +114,10 @@
             var data = {
                 Id: $("#Id").val(),
                 Name: $("#Name").val(),
-                ControlType:$("#ControlType").val(),
-                Required:$("#Required").val(),
+                ControlType: $("#ControlType").val(),
+                Required: $("#Required").prop("checked"),
                 DisplayOrder: $("#DisplayOrder").val(),
-                FormAttributeViewValueModels: attributeValues.values
+                FormAttributeValueEditDtos: attributeValues.values
             }
             $.post(location.href, data).done(function () {
                 location.href="/home/configure"

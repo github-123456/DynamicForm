@@ -20,18 +20,13 @@
     <div class="container">
         <div class="clearfix d-flex align-items-center">
             <select id="tenants" class="form-control my-3 mr-4" style="width:200px">
-                <option>
-                    租户A
-                </option>
-                <option>
-                    租户B
-                </option>
-                <option>
-                    租户C
-                </option>
+                @foreach (var i in (List<Application.MultiTenant.Dto.TenantDto>)Context.Items["tenants"])
+                {
+                    <option value=@i.Id>@i.Name</option>
+                }
             </select>
-            <a href="/home/order" class="mr-2">order</a>
-            <a href="/home/configure">configure</a>
+            <a href="/home/order" class="mr-4">order</a>
+            <a href="/home/configure">attribute</a>
         </div>
         @RenderBody()
     </div>
@@ -61,10 +56,10 @@
             $("#tenants").prop("disabled", true)
         }
         $("#tenants").change(function () {
-            Cookies.set('tenant', this.value, { expires: 7 });
+            Cookies.set('tenantId', this.value, { expires: 7 });
             location.reload()
         })
-        $("#tenants").val('@Html.Raw(Context.Items["tenantName"])')
+        $("#tenants").val('@Context.Items["tenantId"]')
     </script>
     @RenderSection("Scripts", required: false)
 </body>

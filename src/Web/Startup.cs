@@ -2,10 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Application.DynamicForm;
+using Application.MultiTenant;
+using Core;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -30,6 +34,12 @@ namespace Web
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
+            var connection = @"Server=(localdb)\mssqllocaldb;Database=DynamicForm;Trusted_Connection=True;ConnectRetryCount=0";
+            services.AddDbContext<AppDbContext>
+                (options => options.UseSqlServer(connection));
+
+            services.AddTransient<IDynamicFormService, DynamicFormService>();
+            services.AddTransient<ITenantService, TenantService>();
 
             services.AddMvc(s => s.Filters.Add(new TenantFilter())).SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
